@@ -115,6 +115,11 @@ See [LICENSE](LICENSE).
 
 If you want to help out, see [CONTRIBUTING](docs/CONTRIBUTING.md) for a set of guidelines.
 
+## Rebranding documentation
+
+Run `bash utils/rebrand.sh` to update the documentation to use the NetCodex name. This script replaces occurrences of "Monero" in Markdown and text files while skipping `LICENSE`, files under `src/`, and `external/`.
+
+
 ## Scheduled software/network upgrades
 
 Monero uses a scheduled software/network upgrade (hard fork) mechanism to implement new features into the Monero software and network. This means that users of Monero (end users and service providers) should run current versions and upgrade their software when new releases are available. Software upgrades occur when new features are developed and implemented in the codebase. Network upgrades occur in tandem with software upgrades that modify the consensus rules of the Monero network. The required software for network upgrades will be available prior to the scheduled network upgrade date. Please check the repository prior to this date for the proper Monero software version. Below is the historical schedule and the projected schedule for the next upgrade.
