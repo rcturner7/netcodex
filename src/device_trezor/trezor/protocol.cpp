@@ -146,7 +146,7 @@ namespace ki {
 
   bool key_image_data(wallet_shim * wallet,
                       const std::vector<tools::wallet2::transfer_details> & transfers,
-                      std::vector<MoneroTransferDetails> & res)
+                      std::vector<NetCodexTransferDetails> & res)
   {
     for(auto & td : transfers){
       ::crypto::public_key tx_pub_key = wallet->get_tx_pub_key_from_received_outs(td);
@@ -167,7 +167,7 @@ namespace ki {
     return true;
   }
 
-  std::string compute_hash(const MoneroTransferDetails & rr){
+  std::string compute_hash(const NetCodexTransferDetails & rr){
     KECCAK_CTX kck;
     uint8_t md[32];
 
@@ -188,7 +188,7 @@ namespace ki {
     return std::string(reinterpret_cast<const char*>(md), sizeof(md));
   }
 
-  void generate_commitment(std::vector<MoneroTransferDetails> & mtds,
+  void generate_commitment(std::vector<NetCodexTransferDetails> & mtds,
                            const std::vector<tools::wallet2::transfer_details> & transfers,
                            std::shared_ptr<messages::monero::MoneroKeyImageExportInitRequest> & req)
   {
@@ -264,12 +264,12 @@ namespace ki {
 // Cold transaction signing
 namespace tx {
 
-  void translate_address(MoneroAccountPublicAddress * dst, const cryptonote::account_public_address * src){
+  void translate_address(NetCodexAccountPublicAddress * dst, const cryptonote::account_public_address * src){
     dst->set_view_public_key(key_to_string(src->m_view_public_key));
     dst->set_spend_public_key(key_to_string(src->m_spend_public_key));
   }
 
-  void translate_dst_entry(MoneroTransactionDestinationEntry * dst, const cryptonote::tx_destination_entry * src){
+  void translate_dst_entry(NetCodexTransactionDestinationEntry * dst, const cryptonote::tx_destination_entry * src){
     dst->set_amount(src->amount);
     dst->set_is_subaddress(src->is_subaddress);
     dst->set_is_integrated(src->is_integrated);
@@ -277,19 +277,19 @@ namespace tx {
     translate_address(dst->mutable_addr(), &(src->addr));
   }
 
-  void translate_klrki(MoneroMultisigKLRki * dst, const rct::multisig_kLRki * src){
+  void translate_klrki(NetCodexMultisigKLRki * dst, const rct::multisig_kLRki * src){
     dst->set_k(key_to_string(src->k));
     dst->set_l(key_to_string(src->L));
     dst->set_r(key_to_string(src->R));
     dst->set_ki(key_to_string(src->ki));
   }
 
-  void translate_rct_key(MoneroRctKey * dst, const rct::ctkey * src){
+  void translate_rct_key(NetCodexRctKey * dst, const rct::ctkey * src){
     dst->set_dest(key_to_string(src->dest));
     dst->set_commitment(key_to_string(src->mask));
   }
 
-  std::string hash_addr(const MoneroAccountPublicAddress * addr, boost::optional<uint64_t> amount, boost::optional<bool> is_subaddr){
+  std::string hash_addr(const NetCodexAccountPublicAddress * addr, boost::optional<uint64_t> amount, boost::optional<bool> is_subaddr){
     return hash_addr(addr->spend_public_key(), addr->view_public_key(), amount, is_subaddr);
   }
 
@@ -439,7 +439,7 @@ namespace tx {
     }
   }
 
-  void Signer::set_tx_input(MoneroTransactionSourceEntry * dst, size_t idx, bool need_ring_keys, bool need_ring_indices){
+  void Signer::set_tx_input(NetCodexTransactionSourceEntry * dst, size_t idx, bool need_ring_keys, bool need_ring_indices){
     const cryptonote::tx_source_entry & src = cur_tx().sources[idx];
     const tools::wallet2::transfer_details & transfer = get_source_transfer(idx);
 
@@ -557,7 +557,7 @@ namespace tx {
 
   void Signer::step_init_ack(std::shared_ptr<const messages::monero::MoneroTransactionInitAck> ack){
     if (ack->has_rsig_data()){
-      m_ct.rsig_param = std::make_shared<MoneroRsigData>(ack->rsig_data());
+      m_ct.rsig_param = std::make_shared<NetCodexRsigData>(ack->rsig_data());
     }
 
     assign_from_repeatable(&(m_ct.tx_out_entr_hmacs), ack->hmacs().begin(), ack->hmacs().end());

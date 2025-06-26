@@ -22,13 +22,13 @@ To update ts files after changing source code:
 To add a new language, eg Spanish (ISO code es):
 
 ```bash
-cp translations/monero.ts translations/monero_es.ts
+cp translations/netcodex.ts translations/netcodex_es.ts
 ```
 
 To edit translations for Spanish:
 
 ```bash
-linguist translations/monero_es.ts
+linguist translations/netcodex_es.ts
 ```
 
 To build translations after modifying them:
