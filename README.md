@@ -609,11 +609,11 @@ To run in background:
 ```
 
 To run as a systemd service, copy
-[monerod.service](utils/systemd/monerod.service) to `/etc/systemd/system/` and
-[monerod.conf](utils/conf/monerod.conf) to `/etc/`. The [example
-service](utils/systemd/monerod.service) assumes that the user `monero` exists
+[netcodexd.service](utils/systemd/netcodexd.service) to `/etc/systemd/system/` and
+[netcodexd.conf](utils/conf/netcodexd.conf) to `/etc/`. The [example
+service](utils/systemd/netcodexd.service) assumes that the user `monero` exists
 and its home is the data directory specified in the [example
-config](utils/conf/monerod.conf).
+config](utils/conf/netcodexd.conf).
 
 If you're on Mac, you may need to add the `--max-concurrency 1` option to
 monero-wallet-cli, and possibly monerod, if you get crashes refreshing.
@@ -634,8 +634,8 @@ While Monero isn't made to integrate with Tor, it can be used wrapped with torso
 setting the following configuration parameters and environment variables:
 
 * `--p2p-bind-ip 127.0.0.1` on the command line or `p2p-bind-ip=127.0.0.1` in
-  monerod.conf to disable listening for connections on external interfaces.
-* `--no-igd` on the command line or `no-igd=1` in monerod.conf to disable IGD
+  netcodexd.conf to disable listening for connections on external interfaces.
+* `--no-igd` on the command line or `no-igd=1` in netcodexd.conf to disable IGD
   (UPnP port forwarding negotiation), which is pointless with Tor.
 * `DNS_PUBLIC=tcp` or `DNS_PUBLIC=tcp://x.x.x.x` where x.x.x.x is the IP of the
   desired DNS server, for DNS requests to go over TCP, so that they are routed
@@ -648,7 +648,7 @@ setting the following configuration parameters and environment variables:
    connect from remote hosts. On other systems, it may be needed for local wallets
    as well.
 * Do NOT pass `--detach` when running through torsocks with systemd, (see
-  [utils/systemd/monerod.service](utils/systemd/monerod.service) for details).
+  [utils/systemd/netcodexd.service](utils/systemd/netcodexd.service) for details).
 * If you use the wallet with a Tor daemon via the loopback IP (eg, 127.0.0.1:9050),
   then use `--untrusted-daemon` unless it is your own hidden service.
 
@@ -658,7 +658,7 @@ Example command line to start monerod through Tor:
 DNS_PUBLIC=tcp torsocks monerod --p2p-bind-ip 127.0.0.1 --no-igd
 ```
 
-A helper script is in contrib/tor/monero-over-tor.sh. It assumes Tor is installed
+A helper script is in contrib/tor/netcodex-over-tor.sh. It assumes Tor is installed
 already, and runs Tor and Monero with the right configuration.
 
 ### Using Tor on Tails

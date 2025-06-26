@@ -106,9 +106,9 @@ namespace chacha {
 // Cold Key image sync
 namespace ki {
 
-  using MoneroTransferDetails = messages::monero::MoneroKeyImageSyncStepRequest_MoneroTransferDetails;
-  using MoneroSubAddressIndicesList = messages::monero::MoneroKeyImageExportInitRequest_MoneroSubAddressIndicesList;
-  using MoneroExportedKeyImage = messages::monero::MoneroKeyImageSyncStepAck_MoneroExportedKeyImage;
+  using NetCodexTransferDetails = messages::monero::MoneroKeyImageSyncStepRequest_MoneroTransferDetails;
+  using NetCodexSubAddressIndicesList = messages::monero::MoneroKeyImageExportInitRequest_MoneroSubAddressIndicesList;
+  using NetCodexExportedKeyImage = messages::monero::MoneroKeyImageSyncStepAck_MoneroExportedKeyImage;
   using exported_key_image = hw::device_cold::exported_key_image;
 
   /**
@@ -116,17 +116,17 @@ namespace ki {
    */
   bool key_image_data(wallet_shim * wallet,
                       const std::vector<tools::wallet2::transfer_details> & transfers,
-                      std::vector<MoneroTransferDetails> & res);
+                      std::vector<NetCodexTransferDetails> & res);
 
   /**
    * Computes a hash over MoneroTransferDetails. Commitment used in the KI sync.
    */
-  std::string compute_hash(const MoneroTransferDetails & rr);
+  std::string compute_hash(const NetCodexTransferDetails & rr);
 
   /**
    * Generates KI sync request with commitments computed.
    */
-  void generate_commitment(std::vector<MoneroTransferDetails> & mtds,
+  void generate_commitment(std::vector<NetCodexTransferDetails> & mtds,
                            const std::vector<tools::wallet2::transfer_details> & transfers,
                            std::shared_ptr<messages::monero::MoneroKeyImageExportInitRequest> & req);
 
@@ -143,22 +143,22 @@ namespace ki {
 // Cold transaction signing
 namespace tx {
   using TsxData = messages::monero::MoneroTransactionInitRequest_MoneroTransactionData;
-  using MoneroTransactionDestinationEntry = messages::monero::MoneroTransactionDestinationEntry;
-  using MoneroAccountPublicAddress = messages::monero::MoneroTransactionDestinationEntry_MoneroAccountPublicAddress;
-  using MoneroTransactionSourceEntry = messages::monero::MoneroTransactionSourceEntry;
-  using MoneroMultisigKLRki = messages::monero::MoneroTransactionSourceEntry_MoneroMultisigKLRki;
-  using MoneroOutputEntry = messages::monero::MoneroTransactionSourceEntry_MoneroOutputEntry;
-  using MoneroRctKey = messages::monero::MoneroTransactionSourceEntry_MoneroOutputEntry_MoneroRctKeyPublic;
-  using MoneroRsigData = messages::monero::MoneroTransactionRsigData;
+  using NetCodexTransactionDestinationEntry = messages::monero::MoneroTransactionDestinationEntry;
+  using NetCodexAccountPublicAddress = messages::monero::MoneroTransactionDestinationEntry_MoneroAccountPublicAddress;
+  using NetCodexTransactionSourceEntry = messages::monero::MoneroTransactionSourceEntry;
+  using NetCodexMultisigKLRki = messages::monero::MoneroTransactionSourceEntry_MoneroMultisigKLRki;
+  using NetCodexOutputEntry = messages::monero::MoneroTransactionSourceEntry_MoneroOutputEntry;
+  using NetCodexRctKey = messages::monero::MoneroTransactionSourceEntry_MoneroOutputEntry_MoneroRctKeyPublic;
+  using NetCodexRsigData = messages::monero::MoneroTransactionRsigData;
 
   using tx_construction_data = tools::wallet2::tx_construction_data;
   using unsigned_tx_set = tools::wallet2::unsigned_tx_set;
 
-  void translate_address(MoneroAccountPublicAddress * dst, const cryptonote::account_public_address * src);
-  void translate_dst_entry(MoneroTransactionDestinationEntry * dst, const cryptonote::tx_destination_entry * src);
-  void translate_klrki(MoneroMultisigKLRki * dst, const rct::multisig_kLRki * src);
-  void translate_rct_key(MoneroRctKey * dst, const rct::ctkey * src);
-  std::string hash_addr(const MoneroAccountPublicAddress * addr, boost::optional<uint64_t> amount = boost::none, boost::optional<bool> is_subaddr = boost::none);
+  void translate_address(NetCodexAccountPublicAddress * dst, const cryptonote::account_public_address * src);
+  void translate_dst_entry(NetCodexTransactionDestinationEntry * dst, const cryptonote::tx_destination_entry * src);
+  void translate_klrki(NetCodexMultisigKLRki * dst, const rct::multisig_kLRki * src);
+  void translate_rct_key(NetCodexRctKey * dst, const rct::ctkey * src);
+  std::string hash_addr(const NetCodexAccountPublicAddress * addr, boost::optional<uint64_t> amount = boost::none, boost::optional<bool> is_subaddr = boost::none);
   std::string hash_addr(const std::string & spend_key, const std::string & view_key, boost::optional<uint64_t> amount = boost::none, boost::optional<bool> is_subaddr = boost::none);
   std::string hash_addr(const ::crypto::public_key * spend_key, const ::crypto::public_key * view_key, boost::optional<uint64_t> amount = boost::none, boost::optional<bool> is_subaddr = boost::none);
   ::crypto::secret_key compute_enc_key(const ::crypto::secret_key & private_view_key, const std::string & aux, const std::string & salt);

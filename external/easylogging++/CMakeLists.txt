@@ -34,12 +34,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-monero_enable_coverage()
+netcodex_enable_coverage()
 
 find_package(Threads)
 find_package(Backtrace)
 
-monero_find_all_headers(EASYLOGGING_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}")
+netcodex_find_all_headers(EASYLOGGING_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(easylogging
   easylogging++.cc
