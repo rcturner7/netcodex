@@ -165,6 +165,9 @@ namespace tools
         MAP_JON_RPC_WE("setup_background_sync", on_setup_background_sync, wallet_rpc::COMMAND_RPC_SETUP_BACKGROUND_SYNC)
         MAP_JON_RPC_WE("start_background_sync", on_start_background_sync, wallet_rpc::COMMAND_RPC_START_BACKGROUND_SYNC)
         MAP_JON_RPC_WE("stop_background_sync", on_stop_background_sync, wallet_rpc::COMMAND_RPC_STOP_BACKGROUND_SYNC)
+        MAP_JON_RPC_WE("stake", on_stake, wallet_rpc::COMMAND_RPC_STAKE)
+        MAP_JON_RPC_WE("unstake", on_unstake, wallet_rpc::COMMAND_RPC_UNSTAKE)
+        MAP_JON_RPC_WE("get_stake_status", on_get_stake_status, wallet_rpc::COMMAND_RPC_GET_STAKE_STATUS)
       END_JSON_RPC_MAP()
     END_URI_MAP2()
 
@@ -261,6 +264,9 @@ namespace tools
       bool on_setup_background_sync(const wallet_rpc::COMMAND_RPC_SETUP_BACKGROUND_SYNC::request& req, wallet_rpc::COMMAND_RPC_SETUP_BACKGROUND_SYNC::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
       bool on_start_background_sync(const wallet_rpc::COMMAND_RPC_START_BACKGROUND_SYNC::request& req, wallet_rpc::COMMAND_RPC_START_BACKGROUND_SYNC::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
       bool on_stop_background_sync(const wallet_rpc::COMMAND_RPC_STOP_BACKGROUND_SYNC::request& req, wallet_rpc::COMMAND_RPC_STOP_BACKGROUND_SYNC::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
+      bool on_stake(const wallet_rpc::COMMAND_RPC_STAKE::request& req, wallet_rpc::COMMAND_RPC_STAKE::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
+      bool on_unstake(const wallet_rpc::COMMAND_RPC_UNSTAKE::request& req, wallet_rpc::COMMAND_RPC_UNSTAKE::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
+      bool on_get_stake_status(const wallet_rpc::COMMAND_RPC_GET_STAKE_STATUS::request& req, wallet_rpc::COMMAND_RPC_GET_STAKE_STATUS::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
 
       //json rpc v2
       bool on_query_key(const wallet_rpc::COMMAND_RPC_QUERY_KEY::request& req, wallet_rpc::COMMAND_RPC_QUERY_KEY::response& res, epee::json_rpc::error& er, const connection_context *ctx = NULL);
