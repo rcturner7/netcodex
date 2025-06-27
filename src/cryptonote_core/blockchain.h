@@ -1474,6 +1474,13 @@ namespace cryptonote
     bool verify_stake_signature(const block& bl, const crypto::hash& id) const;
 
     /**
+bool Blockchain::validate_staking_signature(const block& bl, const crypto::hash& id) const
+{
+    // Forward to the existing signature verification logic.
+    // Extra staking checks can be inserted here later.
+    return verify_stake_signature(bl, id);
+}
+
      * @brief validates the proof-of-stake signature
      *
      * This wrapper currently forwards to @ref verify_stake_signature but
@@ -1485,6 +1492,17 @@ namespace cryptonote
      * @return true if the signature is valid, false otherwise
      */
     bool validate_staking_signature(const block& bl, const crypto::hash& id) const;
+
+     * @brief checks if the given public key has a mature stake
+     *
+     * Scans the output database for an output matching the key that is
+     * unlocked and at least STAKE_MATURITY_BLOCKS old.
+     *
+     * @param stake_key the staking public key to check
+     *
+     * @return true if a mature output is found
+     */
+    bool has_mature_unspent_stake(const crypto::public_key &stake_key) const;
 
     /**
      * @brief reverts the blockchain to its previous state following a failed switch
