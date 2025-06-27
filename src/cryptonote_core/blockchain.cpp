@@ -2372,6 +2372,12 @@ bool Blockchain::verify_stake_signature(const block& bl, const crypto::hash& id)
   return true;
 }
 
+//------------------------------------------------------------------
+bool Blockchain::validate_staking_signature(const block& bl, const crypto::hash& id) const
+{
+  return verify_stake_signature(bl, id); // placeholder for future checks
+}
+
 crypto::public_key Blockchain::get_output_key(uint64_t amount, uint64_t global_index) const
 {
   output_data_t data = m_db->get_output_key(amount, global_index);
@@ -4225,7 +4231,7 @@ leave:
     }
 
     // verify stake signature when present
-    if (!verify_stake_signature(bl, id))
+    if (!validate_staking_signature(bl, id))
     {
       MERROR_VER("Block with id: " << id << " failed stake signature verification");
       bvc.m_verifivation_failed = true;
