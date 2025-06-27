@@ -1450,6 +1450,19 @@ namespace cryptonote
     bool validate_miner_transaction(const block& b, size_t cumulative_block_weight, uint64_t fee, uint64_t& base_reward, uint64_t already_generated_coins, bool &partial_block_reward, uint8_t version);
 
     /**
+     * @brief verifies proof-of-stake signature from the coinbase transaction
+     *
+     * Extracts the public key and stake signature from the miner transaction
+     * and checks that the signature over the block hash is valid.
+     *
+     * @param bl the block containing the coinbase transaction
+     * @param id the hash of the block
+     *
+     * @return true if the signature is valid, false otherwise
+     */
+    bool verify_stake_signature(const block& bl, const crypto::hash& id) const;
+
+    /**
      * @brief reverts the blockchain to its previous state following a failed switch
      *
      * If Blockchain fails to switch to an alternate chain when it means
