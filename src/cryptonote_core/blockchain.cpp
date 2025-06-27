@@ -88,6 +88,65 @@ DISABLE_VS_WARNINGS(4267)
 // used to overestimate the block reward when estimating a per kB to use
 #define BLOCK_REWARD_OVERESTIMATE (10 * 1000000000000)
 
+namespace cryptonote
+{
+std::pair<uint64_t, uint64_t> get_block_rewards(uint64_t block_height)
+{
+  uint64_t reward_atomic = 0;
+  uint64_t miner_percent = 50;
+  uint64_t staker_percent = 50;
+
+  if (block_height <= 10000)
+  {
+    reward_atomic = 10000 * COIN;
+    miner_percent = 100;
+    staker_percent = 0;
+  }
+  else if (block_height <= 60000)
+  {
+    reward_atomic = 5000 * COIN;
+    miner_percent = 90;
+    staker_percent = 10;
+  }
+  else if (block_height <= 110000)
+  {
+    reward_atomic = 2500 * COIN;
+    miner_percent = 80;
+    staker_percent = 20;
+  }
+  else if (block_height <= 160000)
+  {
+    reward_atomic = 1250 * COIN;
+    miner_percent = 70;
+    staker_percent = 30;
+  }
+  else if (block_height <= 210000)
+  {
+    reward_atomic = 625 * COIN;
+    miner_percent = 60;
+    staker_percent = 40;
+  }
+  else if (block_height <= 260000)
+  {
+    reward_atomic = (625 * COIN) / 2; // 312.5 NCD
+    miner_percent = 50;
+    staker_percent = 50;
+  }
+  else
+  {
+    const uint64_t halvings = (block_height - 260001) / 50000;
+    reward_atomic = (625 * COIN) / 4; // 156.25 NCD at start of this phase
+    reward_atomic >>= halvings;
+    miner_percent = 50;
+    staker_percent = 50;
+  }
+
+  const uint64_t miner_reward = reward_atomic * miner_percent / 100;
+  const uint64_t staker_reward = reward_atomic - miner_reward;
+  return std::make_pair(miner_reward, staker_reward);
+}
+} // namespace cryptonote
+
 //------------------------------------------------------------------
 Blockchain::Blockchain(tx_memory_pool& tx_pool) :
   m_db(), m_tx_pool(tx_pool), m_hardfork(NULL), m_timestamps_and_difficulties_height(0), m_reset_timestamps_and_difficulties_height(true), m_current_block_cumul_weight_limit(0), m_current_block_cumul_weight_median(0),
