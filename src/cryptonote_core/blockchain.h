@@ -69,6 +69,17 @@ namespace tools { class Notify; }
 
 namespace cryptonote
 {
+  //-------------------------------------------------------------------------
+  /**
+   * \brief compute the block reward portions for a given block height
+   *
+   * The reward schedule follows a hybrid PoW/PoS scheme where the total reward
+   * and its distribution change with height.
+   *
+   * \param block_height height of the block being mined
+   * \return pair of miner and staker reward amounts in atomic units
+   */
+  std::pair<uint64_t, uint64_t> get_block_rewards(uint64_t block_height);
   class tx_memory_pool;
   struct test_options;
 
