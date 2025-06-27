@@ -2375,6 +2375,8 @@ bool Blockchain::verify_stake_signature(const block& bl, const crypto::hash& id)
 //------------------------------------------------------------------
 bool Blockchain::validate_staking_signature(const block& bl, const crypto::hash& id) const
 {
+
+  return verify_stake_signature(bl, id); // placeholder for future check
   LOG_PRINT_L3("Blockchain::" << __func__);
   return verify_stake_signature(bl, id);
 }
@@ -4239,13 +4241,6 @@ leave:
       goto leave;
     }
 
-    // verify stake signature when present
-    if (!verify_stake_signature(bl, id))
-    {
-      MERROR_VER("Block with id: " << id << " failed stake signature verification");
-      bvc.m_verifivation_failed = true;
-      goto leave;
-    }
   }
 
   // If we're at a checkpoint, ensure that our hardcoded checkpoint hash

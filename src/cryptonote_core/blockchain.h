@@ -1474,12 +1474,20 @@ namespace cryptonote
     bool verify_stake_signature(const block& bl, const crypto::hash& id) const;
 
     /**
-bool Blockchain::validate_staking_signature(const block& bl, const crypto::hash& id) const
-{
-    // Forward to the existing signature verification logic.
-    // Extra staking checks can be inserted here later.
-    return verify_stake_signature(bl, id);
-}
+
+     * @brief validates the staking signature for a block
+     *
+     * This function wraps verify_stake_signature and allows for additional
+     * checks to be implemented in the future.
+     *
+     * @param bl the block to check
+     * @param id the hash of the block
+     *
+     * @return true if the staking signature is valid
+     */
+    bool validate_staking_signature(const block& bl, const crypto::hash& id) const;
+
+    /**
 
      * @brief validates the proof-of-stake signature
      *
