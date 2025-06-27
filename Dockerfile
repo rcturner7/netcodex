@@ -43,12 +43,12 @@ COPY --from=builder /src/build/x86_64-linux-gnu/release/bin /usr/local/bin/
 
 # Create monero user
 RUN adduser --system --group --disabled-password monero && \
-	mkdir -p /wallet /home/monero/.bitmonero && \
-	chown -R monero:monero /home/monero/.bitmonero && \
+	mkdir -p /wallet /home/monero/.netcodex && \
+	chown -R monero:monero /home/monero/.netcodex && \
 	chown -R monero:monero /wallet
 
 # Contains the blockchain
-VOLUME /home/monero/.bitmonero
+VOLUME /home/monero/.netcodex
 
 # Generate your wallet via accessing the container and run:
 # cd /wallet
