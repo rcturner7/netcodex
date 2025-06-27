@@ -978,7 +978,7 @@ size_t Blockchain::recalculate_difficulties(boost::optional<uint64_t> start_heig
   std::vector<difficulty_type> new_cumulative_difficulties;
   for (uint64_t height = start_height; height <= top_height; ++height)
   {
-    size_t target = get_ideal_hard_fork_version(height) < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;
+    size_t target = DIFFICULTY_TARGET;
     difficulty_type recalculated_diff = next_difficulty(timestamps, difficulties, target);
 
     boost::multiprecision::uint256_t recalculated_cum_diff_256 = boost::multiprecision::uint256_t(recalculated_diff) + last_cum_diff;
@@ -1281,7 +1281,7 @@ difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std:
   }
 
   // FIXME: This will fail if fork activation heights are subject to voting
-  size_t target = get_ideal_hard_fork_version(bei.height) < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;
+  size_t target = DIFFICULTY_TARGET;
 
   // calculate the difficulty target for the block and return it
   return next_difficulty(timestamps, cumulative_difficulties, target);
@@ -3887,11 +3887,11 @@ uint64_t Blockchain::get_adjusted_time(uint64_t height) const
 
   // project the median to match approximately when the block being validated will appear
   // the median is calculated from a chunk of past blocks, so we use +1 to offset onto the current block
-  median_ts += (BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW + 1) * DIFFICULTY_TARGET_V2 / 2;
+  median_ts += (BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW + 1) * DIFFICULTY_TARGET / 2;
 
   // project the current block's time based on the previous block's time
   // we don't use the current block's time directly to mitigate timestamp manipulation
-  uint64_t adjusted_current_block_ts = timestamps.back() + DIFFICULTY_TARGET_V2;
+  uint64_t adjusted_current_block_ts = timestamps.back() + DIFFICULTY_TARGET;
 
   // return minimum of ~current block time and adjusted median time
   // we do this since it's better to report a time in the past than a time in the future
@@ -5455,7 +5455,7 @@ bool Blockchain::get_hard_fork_voting_info(uint8_t version, uint32_t &window, ui
 
 uint64_t Blockchain::get_difficulty_target() const
 {
-  return get_current_hard_fork_version() < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;
+  return DIFFICULTY_TARGET;
 }
 
 std::map<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> Blockchain:: get_output_histogram(const std::vector<uint64_t> &amounts, bool unlocked, uint64_t recent_cutoff, uint64_t min_count) const
