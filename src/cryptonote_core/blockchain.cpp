@@ -2363,6 +2363,12 @@ bool Blockchain::verify_stake_signature(const block& bl, const crypto::hash& id)
     return false;
   }
 
+  if (!has_mature_unspent_stake(pub_key))
+  {
+    MWARNING("Staking key does not have a mature stake for block " << id);
+    return false;
+  }
+
   return true;
 }
 
@@ -2416,6 +2422,35 @@ bool Blockchain::get_outs(const COMMAND_RPC_GET_OUTPUTS_BIN::request& req, COMMA
     return false;
   }
   return true;
+}
+//------------------------------------------------------------------
+bool Blockchain::has_mature_unspent_stake(const crypto::public_key &stake_key) const
+{
+  LOG_PRINT_L3("Blockchain::" << __func__);
+  const uint64_t current_height = m_db->height();
+  const uint8_t hf_version = m_hardfork->get_current_version();
+  bool found = false;
+
+  auto f = [&](uint64_t amount, const crypto::hash &tx_hash, uint64_t height, size_t index) {
+    if (found)
+      return false;
+    try {
+      output_data_t od = m_db->get_output_key(amount, index);
+      if (od.pubkey == stake_key)
+      {
+        if (is_tx_spendtime_unlocked(od.unlock_time, hf_version) &&
+            height + STAKE_MATURITY_BLOCKS <= current_height)
+        {
+          found = true;
+          return false;
+        }
+      }
+    } catch (...) { }
+    return true;
+  };
+
+  m_db->for_all_outputs(f);
+  return found;
 }
 //------------------------------------------------------------------
 void Blockchain::get_output_key_mask_unlocked(const uint64_t& amount, const uint64_t& index, crypto::public_key& key, rct::key& mask, bool& unlocked) const
