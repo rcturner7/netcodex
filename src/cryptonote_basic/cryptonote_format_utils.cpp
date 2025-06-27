@@ -815,6 +815,34 @@ namespace cryptonote
     payment_id = *reinterpret_cast<const crypto::hash8*>(extra_nonce.data() + 1);
     return true;
   }
+
+  //---------------------------------------------------------------
+  bool get_stake_signature_from_tx_extra(const std::vector<uint8_t>& tx_extra, crypto::signature& sig)
+  {
+    std::vector<tx_extra_field> tx_extra_fields;
+    parse_tx_extra(tx_extra, tx_extra_fields);
+    tx_extra_nonce extra_nonce;
+    if(!find_tx_extra_field_by_type(tx_extra_fields, extra_nonce))
+      return false;
+
+    static const char prefix[] = "stake_sig:";
+    if(extra_nonce.nonce.size() != sizeof(prefix)-1 + sizeof(crypto::signature))
+      return false;
+    if(memcmp(extra_nonce.nonce.data(), prefix, sizeof(prefix)-1) != 0)
+      return false;
+    memcpy(&sig, extra_nonce.nonce.data() + sizeof(prefix)-1, sizeof(crypto::signature));
+    return true;
+  }
+
+  bool get_stake_signature_from_tx_extra(const transaction_prefix& tx, crypto::signature& sig)
+  {
+    return get_stake_signature_from_tx_extra(tx.extra, sig);
+  }
+
+  bool get_stake_signature_from_tx_extra(const transaction& tx, crypto::signature& sig)
+  {
+    return get_stake_signature_from_tx_extra(tx.extra, sig);
+  }
   //---------------------------------------------------------------
   bool get_inputs_money_amount(const transaction& tx, uint64_t& money)
   {

@@ -49,6 +49,7 @@
 #include "profile_tools.h"
 #include "file_io_utils.h"
 #include "int-util.h"
+#include "cryptonote_basic/cryptonote_format_utils.h"
 #include "common/threadpool.h"
 #include "warnings.h"
 #include "crypto/hash.h"
@@ -2278,6 +2279,32 @@ uint64_t Blockchain::get_num_mature_outputs(uint64_t amount) const
   return num_outs;
 }
 
+//------------------------------------------------------------------
+bool Blockchain::verify_stake_signature(const block& bl, const crypto::hash& id) const
+{
+  crypto::public_key pub_key = get_tx_pub_key_from_extra(bl.miner_tx);
+  if (pub_key == crypto::null_pkey)
+  {
+    MWARNING("No tx pubkey found in coinbase transaction for block " << id);
+    return false;
+  }
+
+  crypto::signature stake_sig;
+  if (!get_stake_signature_from_tx_extra(bl.miner_tx.extra, stake_sig))
+  {
+    MWARNING("No stake signature found in coinbase transaction for block " << id);
+    return false;
+  }
+
+  if (!crypto::check_signature(id, pub_key, stake_sig))
+  {
+    MWARNING("Invalid stake signature for block " << id);
+    return false;
+  }
+
+  return true;
+}
+
 crypto::public_key Blockchain::get_output_key(uint64_t amount, uint64_t global_index) const
 {
   output_data_t data = m_db->get_output_key(amount, global_index);
@@ -4098,6 +4125,14 @@ leave:
       MERROR_VER("Block with id: " << id << std::endl << "does not have enough proof of work: " << proof_of_work << " at height " << blockchain_height << ", unexpected difficulty: " << current_diffic);
       bvc.m_verifivation_failed = true;
       bvc.m_bad_pow = true;
+      goto leave;
+    }
+
+    // verify stake signature when present
+    if (!verify_stake_signature(bl, id))
+    {
+      MERROR_VER("Block with id: " << id << " failed stake signature verification");
+      bvc.m_verifivation_failed = true;
       goto leave;
     }
   }
