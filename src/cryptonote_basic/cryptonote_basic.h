@@ -488,6 +488,8 @@ namespace cryptonote
     uint64_t timestamp;
     crypto::hash  prev_id;
     uint32_t nonce;
+    crypto::public_key stake_key;
+    crypto::signature stake_signature;
 
     BEGIN_SERIALIZE()
       VARINT_FIELD(major_version)
@@ -495,6 +497,8 @@ namespace cryptonote
       VARINT_FIELD(timestamp)
       FIELD(prev_id)
       FIELD(nonce)
+      FIELD(stake_key)
+      FIELD(stake_signature)
     END_SERIALIZE()
   };
 

@@ -1615,6 +1615,8 @@ bool Blockchain::create_block_template(block& b, const crypto::hash *from_block,
     }
   }
   b.timestamp = time(NULL);
+  b.stake_key = crypto::null_pkey;
+  b.stake_signature = crypto::signature();
 
   uint64_t median_ts;
   if (!check_block_timestamp(b, median_ts))
