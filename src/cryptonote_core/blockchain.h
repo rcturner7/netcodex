@@ -1469,11 +1469,30 @@ namespace cryptonote
      * @param bl the block containing the coinbase transaction
      * @param id the hash of the block
      *
-     * @return true if the signature is valid, false otherwise
+    * @return true if the signature is valid, false otherwise
      */
     bool verify_stake_signature(const block& bl, const crypto::hash& id) const;
 
     /**
+bool Blockchain::validate_staking_signature(const block& bl, const crypto::hash& id) const
+{
+    // Forward to the existing signature verification logic.
+    // Extra staking checks can be inserted here later.
+    return verify_stake_signature(bl, id);
+}
+
+     * @brief validates the proof-of-stake signature
+     *
+     * This wrapper currently forwards to @ref verify_stake_signature but
+     * exists so additional staking checks can be added independently.
+     *
+     * @param bl the block containing the coinbase transaction
+     * @param id the hash of the block
+     *
+     * @return true if the signature is valid, false otherwise
+     */
+    bool validate_staking_signature(const block& bl, const crypto::hash& id) const;
+
      * @brief checks if the given public key has a mature stake
      *
      * Scans the output database for an output matching the key that is
